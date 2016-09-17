@@ -1,4 +1,5 @@
-(ns ancap-generator.core
+(ns AncapMarkov.core
+  (:gen-class)
   (:use
     [twitter.oauth]
     ;[twitter.callbacks]
@@ -9,8 +10,6 @@
             [clojure.set]
             [overtone.at-at :as at-at]
             [environ.core :refer [env]]))
-
-;TODO: replace all instances of ancap-generator to AncapMarkov
 
 (def possible-starts ["you" "the" "all"]) ;each meme starts with "When", so that's the first word following it
 (def creds (make-oauth-creds (env :app-consumer-key)
@@ -38,6 +37,7 @@
 ;TODO: better trim system
 ;maybe rewrite make-chain so it counts characters?
 ;merging both functions would be great
+;TODO: isn't the next TODO already fixed?
 ;TODO: fix the broken re-pattern (endless loop which can (?!) lead to REPL crash)
 (defn trim-chain [chain]
   (let [words (clojure.string/split (str chain) #" ")]
@@ -66,6 +66,7 @@
       made-chain)))
 
 ;TODO: every while-or-so, complains about "Remotely Closed", wtf is that?
+;TODO: configure log4j to avoid shitty warnings
 (defn tweet-text [text]
   (try (statuses-update-with-media :oauth-creds creds
                                     :body [(file-body-part "meme.jpg")
